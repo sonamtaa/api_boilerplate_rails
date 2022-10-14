@@ -74,6 +74,7 @@ jobs:
       - name: Create test database
         env:
           RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/rails_api_boilerplate_test
         run: |
           bundle exec rails db:create
           bundle exec rails db:schema:load
