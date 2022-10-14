@@ -106,3 +106,5 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: single_quotes
+RSpec/MultipleExpectations:
+  Enabled: false
