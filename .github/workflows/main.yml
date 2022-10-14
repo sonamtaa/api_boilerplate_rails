@@ -3,27 +3,27 @@
 name: build & test & quality
 
 # Triggers the workflow on push or pull request events
-on: [push]
-
-concurrency: 
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - main
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   rspec:
+    name: Run Test
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.actor != 'dependabot[bot]' }}
     env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-
+      RAILS_ENV: test
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         ruby-version: [3.1.2]
-
-    # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
 
     services:
       redis:
@@ -53,34 +53,25 @@ jobs:
         ports:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+      - name: Install required Packages
+        run: sudo apt-get -y install libpq-dev libvips
 
-      - name: Set up Ruby ${{ matrix.ruby-version }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: false
+          bundler-cache: true
 
-      - name: Install ruby dependencies
-        run: bundle install
-
-      - name: Create test database
+      - name: Run Test
         env:
-          RAILS_ENV: test
+          REDIS_URL: redis://localhost:6379/1
           DATABASE_URL: postgres://postgres:password@localhost:5432/rails_api_boilerplate_test
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
-
-      - name: Running rails tests
-        run: bundle exec rspec
+          RAILS_ENV=test bundle exec rake db:migrate:reset
+          bundle exec rspec
 
   rubocop:
     strategy:
@@ -103,6 +94,10 @@ jobs:
 
       - name: Install ruby dependencies
         run: bundle install
+
+      - name: Run Code Analysis
+        run: |
+          bundle exec brakeman
 
       - name: Rubocop
         run: bundle exec rubocop --config .rubocop.yml --parallel
