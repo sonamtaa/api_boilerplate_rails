@@ -20,7 +20,7 @@ describe 'Update Password' do
     end
 
     it 'updates password' do
-      patch user_password_url, params: params
+      patch(user_password_url, params:)
       expect(status).to eq(200)
       expect(json['message']).to eq(I18n.t('devise.passwords.updated_not_active'))
     end

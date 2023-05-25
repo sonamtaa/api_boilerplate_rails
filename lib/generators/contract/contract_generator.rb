@@ -32,7 +32,7 @@ class ContractGenerator < Rails::Generators::NamedBase
   end
 
   def create_contract_file_name
-    (class_path.size.zero? ? file_path : class_path.first).pluralize
+    (class_path.empty? ? file_path : class_path.first).pluralize
   end
 
   def contract_class_name

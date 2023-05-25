@@ -15,7 +15,7 @@ describe 'Create Email/Password' do
     end
 
     it 'sends an email then returns an information message' do
-      post user_password_url, params: params
+      post(user_password_url, params:)
       expect(status).to eq(200)
       expect(Devise.mailer.deliveries.count).to eq(1)
       expect(json['message']).to eq(I18n.t('devise.passwords.send_instructions'))

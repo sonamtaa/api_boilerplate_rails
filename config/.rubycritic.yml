@@ -1,0 +1,13 @@
+no_browser: false
+formats:
+  - console
+  - html
+minimum_score: 85
+paths:
+  - app/
+  - lib/
+  - config/
+  - bin/
+  - feature/
+  - spec/
+  - db/
