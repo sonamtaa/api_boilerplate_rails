@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-class PostsContract < ApplicationContract
+class Posts < ApplicationContract
   params do
+    required(:id).filled(:string)
   end
 end

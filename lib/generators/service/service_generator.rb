@@ -11,7 +11,7 @@ class ServiceGenerator < Rails::Generators::NamedBase
 
   def create_service_file
     check_validity!
-    options[:actions].size.zero? ? create_service_file_without_actions : create_service_file_with_actions
+    options[:actions].empty? ? create_service_file_without_actions : create_service_file_with_actions
   end
 
   private
@@ -51,7 +51,7 @@ class ServiceGenerator < Rails::Generators::NamedBase
   end
 
   def create_service_file_name
-    (class_path.size.zero? ? file_path : class_path.first).singularize
+    (class_path.empty? ? file_path : class_path.first).singularize
   end
 
   def service_class_name
