@@ -56,7 +56,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        ruby-version: [3.2.2]
+        ruby-version: [3.2.4]
 
     runs-on: ${{ matrix.os }}
 
@@ -90,7 +90,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        ruby-version: [3.2.2]
+        ruby-version: [3.2.4]
 
     runs-on: ${{ matrix.os }}
 
